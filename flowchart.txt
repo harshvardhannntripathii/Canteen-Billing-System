@@ -1,0 +1,217 @@
+# Smart Canteen Billing System - Program Flowchart
+
+## Text-Based Flowchart Representation
+
+```
+┌─────────────────────────────────────┐
+│         START PROGRAM               │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│    Initialize Menu (12 items)       │
+│  - Set food IDs, names, prices,     │
+│    quantities                       │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│    Display Welcome Message          │
+│    "SMART CANTEEN BILLING SYSTEM"   │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│      DISPLAY MAIN MENU              │
+│  1. Display Food Menu               │
+│  2. Search Food Item                │
+│  3. Place Order                     │
+│  4. Generate Bill                   │
+│  5. View Available Stock            │
+│  6. Exit                            │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│    GET USER CHOICE (1-6)            │
+│    [Input Validation]               │
+└──────────────┬──────────────────────┘
+               │
+       ┌───────┴───────┐
+       │               │
+       ▼               ▼
+   ┌───────┐       ┌───────┐
+   │Valid? │       │Valid? │
+   └───┬───┘       └───┬───┘
+       │               │
+      No             Yes
+       │               │
+       ▼               ▼
+┌─────────────┐   ┌─────────────┐
+│ Show Error  │   │  PROCESS    │
+│ "Invalid    │   │  CHOICE     │
+│  Choice"    │   └──────┬──────┘
+└──────┬──────┘          │
+       │                │
+       └───────┬────────┘
+               │
+       ┌───────┴───────┐
+       │  SWITCH CASE  │
+       └───────┬───────┘
+               │
+    ┌──────────┼──────────┐
+    │          │          │
+    ▼          ▼          ▼
+  CASE 1    CASE 2      CASE 3
+    │          │          │
+    ▼          ▼          ▼
+┌────────┐ ┌────────┐ ┌──────────────────┐
+│Display │ │Search  │ │Place Order       │
+│Food    │ │Food    │ │                  │
+│Menu    │ │Item    │ │┌────────────────┐│
+│        │ │        │ ││Show Available  ││
+│1. Loop │ │1. Get  │ ││Items           ││
+│   items │ │  Food ID│ │└──────┬─────────┘│
+│2. Print │ │2. Find │ │       │          │
+│   table │ │  index │ │       ▼          │
+└────┬────┘ │3. If   │ │┌──────────────┐  │
+     │     │  found:│ ││Get Food ID   │  │
+     │     │   print│ ││Validate ID   │  │
+     │     │   details│ ││Check Stock   │  │
+     │     │  else: │ ││Get Quantity  │  │
+     │     │   error│ ││Validate Qty  │  │
+     │     └────┬───┘ ││Check Stock   │  │
+     │          │     ││Add/Update    │  │
+     │          │     ││Order Array   │  │
+     │          │     ││Ask Continue  │  │
+     │          │     │└──────┬───────┘  │
+     │          │     │       │          │
+     │          │     │      Yes/No      │
+     │          │     │       │          │
+     │          │     └───────┘          │
+     │          │                        │
+     └──────────┘                        │
+                                        ▼
+                                  ┌─────────────┐
+                                  │Return to    │
+                                  │Main Menu    │
+                                  └──────┬──────┘
+                                         │
+    ┌────────────────────────────────────┘
+    │
+    ▼
+  CASE 4
+    │
+    ▼
+┌─────────────────────────────────────┐
+│       Generate Bill                 │
+│                                     │
+│ 1. If no orders:                    │
+│    Show "No items in order"         │
+│    Return to menu                   │
+│                                     │
+│ 2. Print Bill Header                │
+│                                     │
+│ 3. Loop through orders:             │
+│    Print item, qty, price, subtotal │
+│    Calculate grand total            │
+│                                     │
+│ 4. Print Grand Total                │
+│                                     │
+│ 5. Ask "Confirm order? (y/n)"       │
+│                                     │
+│ 6. If YES:                          │
+│    For each order:                  │
+│      Find menu index                │
+│      Deduct quantity from stock     │
+│    Print "Order Confirmed!"         │
+│    Print Updated Stock              │
+│    Clear order array                │
+│                                     │
+│ 7. If NO:                           │
+│    Print "Order cancelled"          │
+│    Keep items in cart               │
+│                                     │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+  CASE 5
+    │
+    ▼
+┌─────────────────────────────────────┐
+│    View Available Stock             │
+│                                     │
+│ 1. Print Header                     │
+│ 2. Loop all menu items:             │
+│    Print ID, Name, Price, Qty       │
+│    Print Status (In Stock/Out)      │
+│                                     │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+  CASE 6
+    │
+    ▼
+┌─────────────────────────────────────┐
+│         EXIT PROGRAM                │
+│                                     │
+│ Print "Thank you..." message        │
+│ Return 0                            │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│            END PROGRAM              │
+└─────────────────────────────────────┘
+```
+
+## Function Call Flow
+
+```
+main()
+  ├── initializeMenu()
+  ├── displayMenu()
+  ├── searchFoodItem()
+  │     └── findItemIndex()
+  ├── placeOrder()
+  │     ├── findItemIndex()
+  │     ├── getValidQuantity()
+  │     └── clearInputBuffer()
+  ├── generateBill()
+  │     ├── findItemIndex()
+  │     └── clearInputBuffer()
+  ├── viewAvailableStock()
+  ├── getValidChoice()
+  ├── getValidPrice()
+  ├── getValidQuantity()
+  └── clearInputBuffer()
+```
+
+## Data Flow
+
+```
+MENU ARRAY (FoodItem[20])
+    │
+    ├── initializeMenu() → Populates 12 items
+    │
+    ├── displayMenu() → Reads all items
+    │
+    ├── searchFoodItem() → Reads one item by ID
+    │
+    ├── placeOrder() → Reads items, writes to ORDER ARRAY
+    │
+    ├── generateBill() → Reads ORDER ARRAY
+    │     ├── Confirmed: Updates MENU ARRAY (stock--)
+    │     └── Cancelled: No changes
+    │
+    └── viewAvailableStock() → Reads all items
+```
+
+## Control Flow Summary
+
+1. **Sequential**: Program starts → Initializes → Shows Menu
+2. **Iterative**: Main menu loop (do-while until exit)
+3. **Selection**: Switch-case for menu options
+4. **Validation Loops**: Input validation with while(1) loops
+5. **Nested Loops**: Order placement loop (add multiple items)
+6. **Function Calls**: Modular design with 10+ functions

@@ -1,0 +1,460 @@
+# Smart Canteen Billing System - Lab 2 Presentation Outline
+
+## Slide 1: Title Slide
+**Smart Canteen Billing System**
+- Course: [Course Name/Code]
+- Lab Assignment: Lab 1 & 2
+- Team: Batch [XX] Team [XX]
+- Members:
+  - [Member 1 Name] - [Roll No.]
+  - [Member 2 Name] - [Roll No.]
+  - [Member 3 Name] - [Roll No.]
+- Date: [Submission Date]
+- Guide: [Faculty Name]
+
+---
+
+## Slide 2: Problem Statement
+**Objective**
+- Develop a menu-driven C program for canteen billing
+- Manage food items, process orders, generate bills
+- Track inventory with automatic stock updates
+
+**Requirements**
+- Minimum 10 food items with ID, name, price, quantity
+- Search by food ID
+- Multi-item ordering with validation
+- Formatted bill generation
+- Automatic stock deduction
+- Input validation for all user inputs
+
+---
+
+## Slide 3: System Architecture
+**Program Structure**
+
+```
+┌─────────────────────────────────────┐
+│            MAIN MODULE              │
+│  (main.c - Entry Point)             │
+└──────────────┬──────────────────────┘
+               │
+    ┌──────────┼──────────┐
+    ▼          ▼          ▼
+┌────────┐ ┌────────┐ ┌────────┐
+│  Menu  │ │ Order  │ │ Bill & │
+│ Mgmt   │ │ Mgmt   │ │ Stock  │
+└────┬───┘ └────┬───┘ └────┬───┘
+     │          │          │
+     ▼          ▼          ▼
+┌─────────────────────────────────────┐
+│         DATA STRUCTURES             │
+│  FoodItem[20]  |  OrderItem[50]     │
+└─────────────────────────────────────┘
+```
+
+**Key Components**
+- `FoodItem` struct: id, name, price, quantity
+- `OrderItem` struct: item, orderedQty, subtotal
+- 6 main functions + 4 validation helpers
+- Global arrays for menu and orders
+
+---
+
+## Slide 4: Data Structures
+**FoodItem Structure**
+```c
+typedef struct {
+    char id[10];        // Food ID (e.g., "101")
+    char name[50];      // Food Name (e.g., "Burger")
+    float price;        // Unit Price (e.g., 50.00)
+    int quantity;       // Available Stock (e.g., 20)
+} FoodItem;
+```
+
+**OrderItem Structure**
+```c
+typedef struct {
+    FoodItem item;      // Copy of food item
+    int orderedQuantity; // Quantity ordered
+    float subtotal;     // price × quantity
+} OrderItem;
+```
+
+**Global Arrays**
+- `FoodItem menu[MAX_ITEMS]` - 12 pre-loaded items
+- `OrderItem orders[MAX_ORDERS]` - Current order cart
+
+---
+
+## Slide 5: Menu & Food Items
+**Pre-loaded Menu (12 Items)**
+
+| ID | Item | Price | Stock |
+|----|------|-------|-------|
+| 101 | Burger | ₹50 | 20 |
+| 102 | Pizza | ₹100 | 15 |
+| 103 | Sandwich | ₹40 | 25 |
+| 104 | Samosa | ₹15 | 30 |
+| 105 | Cold Coffee | ₹60 | 20 |
+| 106 | Tea | ₹10 | 50 |
+| 107 | French Fries | ₹45 | 20 |
+| 108 | Noodles | ₹70 | 15 |
+| 109 | Dosa | ₹50 | 20 |
+| 110 | Juice | ₹30 | 25 |
+| 111 | Chocolate Cake | ₹80 | 10 |
+| 112 | Veg Roll | ₹35 | 25 |
+
+**Features**
+- Formatted table display
+- Shows real-time stock
+- 12 items (exceeds minimum 10)
+
+---
+
+## Slide 6: Search Functionality
+**Search Food Item (Option 2)**
+
+**Process:**
+1. User enters Food ID
+2. `findItemIndex()` searches menu array
+3. If found: Display name, price, quantity, status
+4. If not found: Error message
+
+**Demo Input:** `101`
+**Demo Output:**
+```
+Food ID    : 101
+Food Name  : Burger
+Price      : ₹50.00
+Available  : 20
+Status     : Available
+```
+
+**Error Case:** Invalid ID `999` → "Food item not found!"
+
+---
+
+## Slide 7: Order Management
+**Place Order (Option 3)**
+
+**Features:**
+- Shows only available items (stock > 0)
+- Accept Food ID and Quantity
+- Validations:
+  - ✓ Valid Food ID
+  - ✓ Quantity > 0
+  - ✓ Quantity ≤ Available Stock
+- Supports multiple items in one order
+- Updates existing item if already in cart
+- Prevents exceeding total stock
+
+**Demo Order:**
+```
+Enter Food ID: 101
+Enter Quantity: 2
+Enter Food ID: 104
+Enter Quantity: 3
+```
+
+---
+
+## Slide 8: Bill Generation
+**Generate Bill (Option 4)**
+
+**Bill Format:**
+```
+BILL RECEIPT
+
+Item           Qty  Unit Price  Subtotal
+----------------------------------------
+Burger          2     ₹50.00     ₹100.00
+Samosa          3     ₹15.00      ₹45.00
+----------------------------------------
+Grand Total:              ₹145.00
+```
+
+**Confirmation Process:**
+1. Display itemized bill
+2. Ask "Confirm order? (y/n)"
+3. If YES:
+   - Deduct stock from menu array
+   - Show updated stock
+   - Clear order cart
+4. If NO:
+   - Keep items in cart
+   - No stock changes
+
+---
+
+## Slide 9: Inventory Management
+**Automatic Stock Updates**
+
+**Before Order:**
+- Burger: 20 | Samosa: 30
+
+**After Order (Burger×2, Samosa×3):**
+- Burger: 18 | Samosa: 27
+
+**Stock Protection:**
+- Prevents negative quantities
+- Real-time availability check
+- "Out of Stock" status when 0
+- View Stock option shows all items
+
+---
+
+## Slide 10: Input Validation
+**Comprehensive Error Handling**
+
+| Input Type | Validation | Error Message |
+|------------|------------|---------------|
+| Menu Choice | 1-6 only | "Invalid choice! Enter 1-6" |
+| Food ID | Must exist | "Invalid Food ID!" |
+| Quantity | > 0, ≤ Stock | "Insufficient stock!" |
+| Quantity | Numeric only | "Invalid input!" |
+| Confirmation | y/n only | Re-prompts |
+
+**Validation Functions:**
+- `getValidChoice(min, max)` - Menu choices
+- `getValidQuantity(maxStock)` - Order quantities
+- `getValidPrice()` - Price inputs
+- `clearInputBuffer()` - Clears stdin
+
+---
+
+## Slide 11: Program Flow
+**Control Flow Diagram**
+
+```
+START
+  │
+  ▼
+Initialize Menu (12 items)
+  │
+  ▼
+DO-WHILE Loop (until Exit)
+  │
+  ├── Display Menu
+  ├── Get Valid Choice (1-6)
+  ├── SWITCH(choice)
+  │     ├── 1: displayMenu()
+  │     ├── 2: searchFoodItem()
+  │     ├── 3: placeOrder()
+  │     ├── 4: generateBill()
+  │     ├── 5: viewAvailableStock()
+  │     └── 6: Exit
+  │
+  ▼ (Loop back)
+END
+```
+
+**Key Constructs Used:**
+- Structures (FoodItem, OrderItem)
+- Arrays (menu[20], orders[50])
+- Functions (10+ modular functions)
+- Loops (do-while, for, while)
+- Switch-case (menu handling)
+- Conditionals (if-else validation)
+- String handling (strcmp, strcpy)
+
+---
+
+## Slide 12: Testing & Test Cases
+**Test Coverage**
+
+| Category | Tests | Status |
+|----------|-------|--------|
+| Normal Operations | 5 | ✓ Pass |
+| Search | 3 | ✓ Pass |
+| Multi-item Orders | 3 | ✓ Pass |
+| Bill Generation | 3 | ✓ Pass |
+| Input Validation | 6 | ✓ Pass |
+| Edge Cases | 4 | ✓ Pass |
+| **Total** | **24** | **✓ All Pass** |
+
+**Boundary Tests:**
+- Exact stock quantity ✓
+- Zero/negative quantity ✓
+- Invalid IDs ✓
+- Insufficient stock ✓
+- Non-numeric inputs ✓
+- Empty cart billing ✓
+
+---
+
+## Slide 13: Code Quality
+**Best Practices Followed**
+
+✅ **Modular Design** - 10+ functions, single responsibility
+✅ **Meaningful Names** - `findItemIndex`, `generateBill`, `placeOrder`
+✅ **Constants** - `#define MAX_ITEMS 20`, `#define MAX_ORDERS 50`
+✅ **Input Validation** - All user inputs validated
+✅ **Error Handling** - Clear messages, no crashes
+✅ **Comments** - Function headers, logic explanations
+✅ **No Global Variables** - Only necessary arrays global
+✅ **Beginner-Friendly** - Simple constructs, no pointers
+
+**Code Statistics:**
+- Lines of Code: ~350
+- Functions: 10
+- Structures: 2
+- Global Arrays: 2
+
+---
+
+## Slide 14: Compilation & Execution
+**Build Instructions**
+
+```bash
+# GCC (Linux/Mac/MinGW)
+gcc canteen_billing.c -o canteen_billing
+
+# Run
+./canteen_billing
+```
+
+```cmd
+# Windows (MinGW)
+gcc canteen_billing.c -o canteen_billing.exe
+canteen_billing.exe
+```
+
+```cmd
+# Visual Studio
+cl canteen_billing.c
+canteen_billing.exe
+```
+
+**Requirements:**
+- C99+ compiler
+- Standard library only
+- No external dependencies
+
+---
+
+## Slide 15: Challenges & Solutions
+**Challenges Faced**
+
+| Challenge | Solution |
+|-----------|----------|
+| Multi-item orders | OrderItem array with quantity tracking |
+| Stock synchronization | Deduct only on confirmation |
+| Duplicate items in cart | Check existing order, update quantity |
+| Input buffer issues | `clearInputBuffer()` after each scanf |
+| Invalid input loops | `while(1)` with validation functions |
+
+**Lessons Learned**
+- Importance of input validation
+- Modular design simplifies debugging
+- Global state management for inventory
+- User experience with clear menus
+
+---
+
+## Slide 16: Future Enhancements
+**Possible Improvements**
+
+1. **File I/O** - Save/load menu from file
+2. **Multiple Users** - Admin vs Customer modes
+3. **Categories** - Snacks, Drinks, Meals
+4. **Discounts** - Combo offers, loyalty
+5. **Reports** - Daily sales, popular items
+6. **GUI** - NCurses or web interface
+7. **Database** - SQLite for persistence
+
+---
+
+## Slide 17: Team Contribution
+**Member 1: [Name]**
+- Menu management & display functions
+- Data structure design
+- Testing & debugging
+
+**Member 2: [Name]**
+- Order placement logic
+- Bill generation & formatting
+- Input validation functions
+
+**Member 3: [Name]**
+- Search functionality
+- Inventory/stock management
+- Documentation & presentation
+
+**All Members:**
+- Code review & integration
+- Testing all 24 test cases
+- GitHub repository setup
+
+---
+
+## Slide 18: Demo Script (Live Demo)
+**Step-by-Step Demo (5 minutes)**
+
+1. **Start Program** - Show welcome screen
+2. **Display Menu (1)** - Show all 12 items
+3. **Search Item (2)** - Search ID 101 (Burger), then invalid 999
+4. **Place Order (3)** - Order Burger×2, Samosa×3
+5. **Generate Bill (4)** - Show bill, confirm 'y'
+6. **View Stock (5)** - Show updated quantities
+7. **Error Cases** - Try invalid ID, negative qty, insufficient stock
+8. **Exit (6)** - Clean exit
+
+---
+
+## Slide 19: GitHub Repository
+**Repository Structure**
+```
+BatchXX_TeamXX_SmartCanteenBilling/
+├── README.md
+├── canteen_billing.c
+├── sample_test_cases.txt
+├── flowchart.txt
+├── presentation_outline.txt
+└── screenshots/
+    ├── food_menu.png
+    ├── billing_output.png
+    └── inventory_update.png
+```
+
+**Repository URL:** [GitHub Link]
+- Public/accessible to faculty
+- All required files uploaded
+- Commit history shows team collaboration
+
+---
+
+## Slide 20: Conclusion
+**Summary**
+✅ Complete menu-driven C program
+✅ All 6 required features implemented
+✅ 12 food items (exceeds minimum 10)
+✅ Full input validation & error handling
+✅ Automatic inventory management
+✅ 24 test cases - all passing
+✅ Modular, readable, beginner-friendly code
+✅ Ready for GitHub submission
+
+**Thank You!**
+Questions welcome.
+
+---
+
+## Appendix: Sample Questions for Faculty
+
+**Technical Questions:**
+1. "How does the program prevent negative stock?"
+2. "Explain the difference between FoodItem and OrderItem structures."
+3. "How is input validation handled for non-numeric entries?"
+4. "What happens if user cancels at bill confirmation?"
+5. "How would you add file persistence to this program?"
+
+**Design Questions:**
+1. "Why use structures instead of parallel arrays?"
+2. "How does the modular design help maintenance?"
+3. "What are the limitations of current array sizes?"
+
+**Extension Questions:**
+1. "How would you add categories to food items?"
+2. "What changes needed for multiple canteens?"
+3. "How to implement user authentication?"

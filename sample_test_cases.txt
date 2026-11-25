@@ -1,0 +1,414 @@
+# Smart Canteen Billing System - Sample Test Cases
+
+## Test Case 1: Display Food Menu
+**Input:**
+```
+1
+6
+```
+
+**Expected Output:**
+- Shows formatted table with all 12 food items
+- Columns: ID, Food Item, Price, Quantity
+- All items displayed with correct data
+
+---
+
+## Test Case 2: Search Valid Food Item
+**Input:**
+```
+2
+101
+6
+```
+
+**Expected Output:**
+```
+--- Food Item Found ---
+Food ID    : 101
+Food Name  : Burger
+Price      : Rs.50.00
+Available  : 20
+Status     : Available
+```
+
+---
+
+## Test Case 3: Search Invalid Food Item
+**Input:**
+```
+2
+999
+6
+```
+
+**Expected Output:**
+```
+Error: Food item with ID '999' not found!
+```
+
+---
+
+## Test Case 4: Search Out of Stock Item (after ordering)
+**Input:**
+```
+3
+104
+30
+0
+4
+y
+2
+104
+6
+```
+
+**Expected Output:**
+- First orders all 30 Samosas
+- Bill confirms and reduces stock to 0
+- Search shows "Out of Stock" status
+
+---
+
+## Test Case 5: Place Order - Single Item
+**Input:**
+```
+3
+101
+2
+0
+4
+y
+6
+```
+
+**Expected Output:**
+- Adds Burger x2 to order
+- Bill shows: Burger 2 x Rs.50.00 = Rs.100.00
+- Grand Total: Rs.100.00
+- Stock updated: Burger from 20 to 18
+
+---
+
+## Test Case 6: Place Order - Multiple Items
+**Input:**
+```
+3
+101
+2
+104
+3
+0
+4
+y
+6
+```
+
+**Expected Output:**
+```
+BILL RECEIPT
+
+Item                 | Qty | Unit Price | Subtotal
+------------------------------------------------------
+Burger               |   2 | Rs.50.00   | Rs.100.00
+Samosa               |   3 | Rs.15.00   | Rs.45.00
+------------------------------------------------------
+Grand Total:                              Rs.145.00
+
+Order Confirmed! Stock updated.
+
+Updated Stock:
+Burger: 18
+Samosa: 27
+```
+
+---
+
+## Test Case 7: Place Order - Insufficient Stock
+**Input:**
+```
+3
+101
+25
+0
+6
+```
+
+**Expected Output:**
+```
+Error: Insufficient stock! Only 20 available.
+```
+
+---
+
+## Test Case 8: Place Order - Zero Quantity
+**Input:**
+```
+3
+101
+0
+0
+6
+```
+
+**Expected Output:**
+```
+Error: Quantity must be greater than 0!
+```
+
+---
+
+## Test Case 9: Place Order - Negative Quantity
+**Input:**
+```
+3
+101
+-5
+0
+6
+```
+
+**Expected Output:**
+```
+Error: Quantity must be greater than 0!
+```
+
+---
+
+## Test Case 10: Place Order - Invalid Food ID
+**Input:**
+```
+3
+999
+2
+0
+6
+```
+
+**Expected Output:**
+```
+Error: Invalid Food ID '999'! Please try again.
+```
+
+---
+
+## Test Case 11: Place Order - Update Existing Item in Cart
+**Input:**
+```
+3
+101
+2
+101
+3
+0
+4
+y
+6
+```
+
+**Expected Output:**
+- First adds Burger x2
+- Then updates to Burger x5 (total)
+- Bill shows Burger 5 x Rs.50.00 = Rs.250.00
+- Stock reduced by 5 (from 20 to 15)
+
+---
+
+## Test Case 12: Generate Bill - Empty Cart
+**Input:**
+```
+4
+6
+```
+
+**Expected Output:**
+```
+No items in order! Please place an order first.
+```
+
+---
+
+## Test Case 13: Generate Bill - Cancel Order
+**Input:**
+```
+3
+101
+2
+102
+1
+0
+4
+n
+6
+```
+
+**Expected Output:**
+- Bill displayed with items
+- "Order cancelled. Items remain in cart."
+- Stock NOT deducted
+- Items still in cart for next attempt
+
+---
+
+## Test Case 14: View Available Stock
+**Input:**
+```
+5
+6
+```
+
+**Expected Output:**
+- Shows all 12 items with ID, Name, Price, Qty, Status
+- Status shows "In Stock" or "Out of Stock"
+- Formatted table
+
+---
+
+## Test Case 15: Invalid Menu Choice
+**Input:**
+```
+7
+6
+```
+
+**Expected Output:**
+```
+Invalid choice! Please enter a number between 1 and 6.
+```
+
+---
+
+## Test Case 16: Non-Numeric Menu Choice
+**Input:**
+```
+abc
+6
+```
+
+**Expected Output:**
+```
+Invalid input! Please enter a number between 1 and 6:
+```
+
+---
+
+## Test Case 17: Complete Workflow - Multiple Orders
+**Input:**
+```
+3
+101
+2
+103
+1
+0
+4
+y
+3
+105
+1
+106
+2
+0
+4
+y
+5
+6
+```
+
+**Expected Output:**
+- First order: Burger x2, Sandwich x1 = Rs.140.00
+- Stock: Burger 18, Sandwich 24
+- Second order: Cold Coffee x1, Tea x2 = Rs.80.00
+- Stock: Cold Coffee 19, Tea 48
+- Final stock view shows all updated quantities
+
+---
+
+## Test Case 18: Boundary - Order Exact Stock
+**Input:**
+```
+3
+111
+10
+0
+4
+y
+2
+111
+6
+```
+
+**Expected Output:**
+- Orders all 10 Chocolate Cakes
+- Stock becomes 0
+- Search shows "Out of Stock"
+
+---
+
+## Test Case 19: Add Item Beyond Stock After Partial Order
+**Input:**
+```
+3
+101
+15
+101
+10
+0
+6
+```
+
+**Expected Output:**
+- First adds Burger x15
+- Second attempt: "Error: Total ordered quantity would exceed available stock!"
+- Max 20 burgers available
+
+---
+
+## Test Case 20: Exit Program
+**Input:**
+```
+6
+```
+
+**Expected Output:**
+```
+Thank you for using Smart Canteen Billing System!
+Have a great day!
+```
+
+---
+
+## Summary of Test Coverage
+
+| Category | Test Cases |
+|----------|------------|
+| Normal Operations | 1, 2, 5, 6, 14 |
+| Search Functionality | 2, 3, 4 |
+| Order Placement | 5, 6, 7, 8, 9, 10, 11, 18, 19 |
+| Bill Generation | 6, 12, 13 |
+| Input Validation | 7, 8, 9, 10, 15, 16 |
+| Inventory Management | 4, 6, 13, 17, 18 |
+| Edge Cases | 4, 11, 18, 19 |
+
+---
+
+## How to Run Tests
+
+1. Compile the program:
+   ```bash
+   gcc canteen_billing.c -o canteen_billing
+   ```
+
+2. Run the program:
+   ```bash
+   ./canteen_billing
+   ```
+
+3. Enter inputs as shown in each test case
+
+4. Verify outputs match expected results
+
+5. For automated testing, you can pipe inputs:
+   ```bash
+   echo -e "3\n101\n2\n104\n3\n0\n4\ny\n6" | ./canteen_billing
+   ```

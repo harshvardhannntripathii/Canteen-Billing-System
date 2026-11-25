@@ -1,0 +1,214 @@
+```mermaid
+flowchart TD
+    START([START PROGRAM]) --> INIT[Initialize Menu\n12 Food Items]
+    INIT --> WELCOME[Display Welcome Message]
+    WELCOME --> MENU[Display Main Menu]
+    MENU --> INPUT[Get User Choice\n1-6 with Validation]
+
+    INPUT --> VALID{Valid Choice?}
+    VALID -->|No| ERROR[Show Error: Invalid Choice]
+    ERROR --> MENU
+    VALID -->|Yes| SWITCH{Switch Choice}
+
+    SWITCH -->|1| DISPLAY[Display Food Menu\nLoop through all items\nPrint formatted table]
+    SWITCH -->|2| SEARCH[Search Food Item\nGet Food ID\nFind Index\nIf found: Show details\nElse: Error]
+    SWITCH -->|3| ORDER[Place Order\nShow available items\nLoop: Get ID & Qty\nValidate ID, Stock, Qty\nAdd/Update Order Array\nAsk Continue?]
+    SWITCH -->|4| BILL[Generate Bill\nIf empty: Error\nPrint itemized receipt\nCalc Grand Total\nConfirm Order?\nIf YES: Deduct Stock\nShow Updated Stock\nClear Orders\nIf NO: Keep Cart]
+    SWITCH -->|5| STOCK[View Available Stock\nLoop all items\nPrint ID, Name, Price, Qty\nStatus: In Stock/Out]
+    SWITCH -->|6| EXIT[Print Thank You Message\nExit Program]
+
+    DISPLAY --> MENU
+    SEARCH --> MENU
+    ORDER --> MENU
+    BILL --> MENU
+    STOCK --> MENU
+    EXIT --> END([END PROGRAM])
+
+    style START fill:#e1f5fe
+    style END fill:#ffcdd2
+    style INIT fill:#fff3e0
+    style MENU fill:#f3e5f5
+    style INPUT fill:#e8f5e9
+    style VALID fill:#fff9c4
+    style ERROR fill:#ffcdd2
+    style DISPLAY fill:#e3f2fd
+    style SEARCH fill:#e3f2fd
+    style ORDER fill:#e3f2fd
+    style BILL fill:#e3f2fd
+    style STOCK fill:#e3f2fd
+    style EXIT fill:#ffcdd2
+```
+
+## Alternative: GraphViz DOT Format
+
+```dot
+digraph SmartCanteenBilling {
+    rankdir=TB;
+    node [shape=box, style=filled, fontname="Arial"];
+
+    START [label="START PROGRAM", fillcolor="#e1f5fe"];
+    INIT [label="Initialize Menu\n12 Food Items", fillcolor="#fff3e0"];
+    WELCOME [label="Display Welcome Message"];
+    MENU [label="Display Main Menu\n1. Display Food Menu\n2. Search Food Item\n3. Place Order\n4. Generate Bill\n5. View Available Stock\n6. Exit", fillcolor="#f3e5f5"];
+    INPUT [label="Get User Choice (1-6)\nwith Validation", fillcolor="#e8f5e9"];
+    VALID [label="Valid Choice?", shape=diamond, fillcolor="#fff9c4"];
+    ERROR [label="Show Error:\nInvalid Choice", fillcolor="#ffcdd2"];
+    SWITCH [label="Switch Choice", shape=diamond];
+
+    DISPLAY [label="Display Food Menu\nLoop all items\nPrint table", fillcolor="#e3f2fd"];
+    SEARCH [label="Search Food Item\nGet ID → Find Index\nFound: Show details\nNot Found: Error", fillcolor="#e3f2fd"];
+    ORDER [label="Place Order\nShow available items\nLoop: Get ID, Qty\nValidate: ID, Stock, Qty\nAdd/Update Order Array\nAsk Continue?", fillcolor="#e3f2fd"];
+    BILL [label="Generate Bill\nIf empty: Error\nPrint receipt\nCalc Grand Total\nConfirm?\nYES: Deduct Stock, Clear\nNO: Keep Cart", fillcolor="#e3f2fd"];
+    STOCK [label="View Available Stock\nLoop all items\nPrint ID, Name, Price, Qty\nStatus", fillcolor="#e3f2fd"];
+    EXIT [label="Print Thank You\nExit Program", fillcolor="#ffcdd2"];
+    END [label="END PROGRAM", fillcolor="#ffcdd2"];
+
+    START -> INIT -> WELCOME -> MENU -> INPUT -> VALID;
+    VALID -> ERROR [label="No"];
+    ERROR -> MENU;
+    VALID -> SWITCH [label="Yes"];
+
+    SWITCH -> DISPLAY [label="1"];
+    SWITCH -> SEARCH [label="2"];
+    SWITCH -> ORDER [label="3"];
+    SWITCH -> BILL [label="4"];
+    SWITCH -> STOCK [label="5"];
+    SWITCH -> EXIT [label="6"];
+
+    DISPLAY -> MENU;
+    SEARCH -> MENU;
+    ORDER -> MENU;
+    BILL -> MENU;
+    STOCK -> MENU;
+    EXIT -> END;
+}
+```
+
+## Text-Based Flowchart (For Documentation)
+
+```
+┌─────────────────────┐
+│   START PROGRAM     │
+└─────────┬───────────┘
+          ▼
+┌─────────────────────┐
+│ Initialize Menu     │
+│ (12 Food Items)     │
+└─────────┬───────────┘
+          ▼
+┌─────────────────────┐
+│ Display Welcome     │
+│ "SMART CANTEEN      │
+│  BILLING SYSTEM"    │
+└─────────┬───────────┘
+          ▼
+┌─────────────────────┐
+│ DO-WHILE LOOP       │
+│ (until Exit=6)      │
+└─────────┬───────────┘
+          ▼
+┌─────────────────────┐
+│ Display Main Menu   │
+│ 1. Display Menu     │
+│ 2. Search Item      │
+│ 3. Place Order      │
+│ 4. Generate Bill    │
+│ 5. View Stock       │
+│ 6. Exit             │
+└─────────┬───────────┘
+          ▼
+┌─────────────────────┐
+│ Get Valid Choice    │
+│ (1-6, with retry)   │
+└─────────┬───────────┘
+          ▼
+    ┌─────┴─────┐
+    │  SWITCH   │
+    └─────┬─────┘
+          │
+    ┌─────┼─────┐
+    │     │     │
+    ▼     ▼     ▼
+  CASE 1 CASE 2 CASE 3
+    │     │     │
+    ▼     ▼     ▼
+ ┌────┐ ┌────┐ ┌────────────┐
+ │Show│ │Get │ │Show Avail  │
+ │Menu│ │ ID │ │ Items      │
+ │    │ │Find│ │Loop:       │
+ │Tbl │ │Idx │ │ Get ID,Qty │
+ └──┬─┘ └──┬─┘ │ Validate   │
+    │    │   │ Add/Update │
+    │    │   │ Ask Cont.  │
+    │    │   └─────┬──────┘
+    │    │         │
+    ▼    ▼         ▼
+  ┌─────────────────────┐
+  │    Return to        │
+  │    Main Menu        │
+  └──────────┬──────────┘
+             │
+    ┌────────┼────────┐
+    ▼        ▼        ▼
+  CASE 4   CASE 5   CASE 6
+    │        │        │
+    ▼        ▼        ▼
+ ┌─────┐ ┌─────┐ ┌────────┐
+ │Bill │ │Stock│ │Exit    │
+ │Print│ │Loop │ │Thanks  │
+ │Receipt│All │ │Msg     │
+ │Calc │ │Items│ │Return 0│
+ │Total│ │Print│ └────┬───┘
+ │Confirm?     │       │
+ │YES: Deduct  │       ▼
+ │Stock, Clear │   ┌─────────┐
+ │NO: Keep     │   │  END    │
+ └──────┬──────┘   │ PROGRAM │
+        │          └─────────┘
+        ▼
+    ┌─────────┐
+    │  Loop   │
+    │  Back   │
+    └─────────┘
+```
+
+## Function Call Hierarchy
+
+```
+main()
+├── initializeMenu()
+├── displayMenu()
+├── searchFoodItem()
+│   └── findItemIndex()
+├── placeOrder()
+│   ├── findItemIndex()
+│   ├── getValidQuantity()
+│   └── clearInputBuffer()
+├── generateBill()
+│   ├── findItemIndex()
+│   └── clearInputBuffer()
+├── viewAvailableStock()
+├── getValidChoice()
+├── getValidPrice()
+├── getValidQuantity()
+└── clearInputBuffer()
+```
+
+## Data Structures
+
+```
+FoodItem (struct)
+├── char id[10]       // "101", "102"...
+├── char name[50]     // "Burger", "Pizza"...
+├── float price       // 50.00, 100.00...
+└── int quantity      // 20, 15...
+
+OrderItem (struct)
+├── FoodItem item     // Copy of menu item
+├── int orderedQuantity
+└── float subtotal    // price × quantity
+
+Global Arrays:
+├── FoodItem menu[20]        // 12 items initialized
+└── OrderItem orders[50]     // Current order cart
+```
